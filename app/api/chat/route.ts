@@ -4,11 +4,12 @@ export async function POST(req: Request) {
   // Body parsen
   const body = await req.json();
 
-  // Hier später: Weiterleitung an Ollama
-  // Jetzt erstmal nur ein Echo
-  return Response.json({
-    ok: true,
-    echo: body,
-    info: "Der Bot ist noch nicht angebunden - dies ist ein Test.",
+  const ollamaRes = await fetch("http://localhost:11434/ap/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "command-r-plus",
+      messages: body.messages,
+    }),
   });
 }

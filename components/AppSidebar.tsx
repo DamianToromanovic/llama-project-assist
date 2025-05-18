@@ -73,6 +73,12 @@ const items = [
     icon: Settings,
     id: 5,
   },
+  {
+    title: "Bot",
+    url: "/bot",
+    icon: Projector,
+    id: 6,
+  },
 ];
 
 export function AppSidebar() {
