@@ -4,7 +4,8 @@ export async function POST(req: Request) {
   // Body parsen
   const body = await req.json();
 
-  const ollamaRes = await fetch("http://localhost:11434/ap/chat", {
+  //Anfrage an Ollama weiterleiten
+  const ollamaRes = await fetch("http://localhost:11434/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -12,4 +13,8 @@ export async function POST(req: Request) {
       messages: body.messages,
     }),
   });
+
+  const ollamaData = await ollamaRes.json();
+
+  return Response.json(ollamaData);
 }

@@ -2,46 +2,55 @@
 
 import React, { useState } from "react";
 
-export default function page() {
+type Message = { role: "user" | "bot"; content: string };
+
+export default function Page() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<
-    { role: "user" | "bot"; content: string }[]
-  >([
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: "bot",
       content: "Hallo! Ich bin Ihr Assistent. Wie kann ich helfen?",
     },
   ]);
+  const [loading, setLoading] = useState(false);
 
-  // Auseinandergebaut:
-  // 1 useState<...>
-  // Das <...> ist die TypeScript-Generics-Syntax.
-
-  // Hier gibst du an, welchen Datentyp dein State hat.
-
-  // 2 { role: "user" | "bot"; content: string }[]
-  // Das ist der Typ, den du speicherst.
-
-  // { ... }[] bedeutet:
-  // → Ein Array von Objekten mit zwei Properties:
-
-  // role: entweder "user" oder "bot"
-
-  // content: ein string
-
-  // Du sagst also:
-  // "Der State messages ist ein Array von Nachrichten-Objekten, und jedes Nachrichten-Objekt sieht so aus:"
-
-  // 3 useState<T>(initialValue)
-  // TypeScript weiß jetzt:
-  // Wenn du später messages benutzt, erwartet TS genau dieses Array von Nachrichten.
-
-  // Der Initialwert ([...]) ist ein Array, das schon ein Nachrichten-Objekt enthält.
-
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
+
+    // User-Nachricht hinzufügen
     setMessages((prev) => [...prev, { role: "user", content: input }]);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            ...messages, // bisherige Konversation
+            { role: "user", content: input },
+          ],
+        }),
+      });
+
+      const data = await res.json();
+
+      // Antwort von Ollama lesen (je nach Modell ggf. data.message.content, siehe JSON-Struktur!)
+      const botMessage =
+        data.message?.content ||
+        data.message ||
+        data.messages?.at(-1)?.content || // Falls mehrere messages zurückkommen
+        "Bot konnte nicht antworten.";
+
+      setMessages((prev) => [...prev, { role: "bot", content: botMessage }]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: "Fehler beim Antworten vom Bot." },
+      ]);
+    }
     setInput("");
+    setLoading(false);
   };
 
   return (
@@ -68,6 +77,13 @@ export default function page() {
             </div>
           </div>
         ))}
+        {loading && (
+          <div className="mb-2 flex justify-start">
+            <div className="px-4 py-2 rounded-lg bg-gray-200 text-gray-500">
+              Bot schreibt...
+            </div>
+          </div>
+        )}
       </div>
       <div className="flex gap-2">
         <input
@@ -77,10 +93,12 @@ export default function page() {
           placeholder="Nachricht eingeben..."
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          disabled={loading}
         />
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           onClick={handleSend}
+          disabled={loading}
         >
           Senden
         </button>
