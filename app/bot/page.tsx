@@ -2,19 +2,20 @@
 
 import React, { useState } from "react";
 
-type Message = { role: "user" | "bot"; content: string };
+type Message = { role: "user" | "assistant"; content: string };
 
 export default function Page() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     {
-      role: "bot",
+      role: "assistant",
       content: "Hallo! Ich bin Ihr Assistent. Wie kann ich helfen?",
     },
   ]);
   const [loading, setLoading] = useState(false);
 
   const handleSend = async () => {
+    //nimm alle leerzeichenraus => wenn nichts da dann geh gehe raus
     if (!input.trim()) return;
 
     // User-Nachricht hinzufügen
@@ -34,6 +35,7 @@ export default function Page() {
       });
 
       const data = await res.json();
+      console.log(data);
 
       // Antwort von Ollama lesen (je nach Modell ggf. data.message.content, siehe JSON-Struktur!)
       const botMessage =
@@ -46,7 +48,7 @@ export default function Page() {
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { role: "bot", content: "Fehler beim Antworten vom Bot." },
+        { role: "assistant", content: "Fehler beim Antworten vom Bot." },
       ]);
     }
     setInput("");
@@ -59,21 +61,21 @@ export default function Page() {
         Willkommen bei Ihrem persönlichen Assistenten
       </h1>
       <div className="h-80 overflow-y-auto mb-4 bg-gray-50 p-3 rounded-lg border">
-        {messages.map((msg, i) => (
+        {messages.map((message, index) => (
           <div
-            key={i}
+            key={index}
             className={`mb-2 flex ${
-              msg.role === "user" ? "justify-end" : "justify-start"
+              message.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
             <div
               className={`px-4 py-2 rounded-lg ${
-                msg.role === "user"
+                message.role === "user"
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
             >
-              {msg.content}
+              {message.content}
             </div>
           </div>
         ))}

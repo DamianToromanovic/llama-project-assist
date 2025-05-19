@@ -1,20 +1,32 @@
-// app/api/chat/route.ts
-
 export async function POST(req: Request) {
-  // Body parsen
   const body = await req.json();
 
-  //Anfrage an Ollama weiterleiten
   const ollamaRes = await fetch("http://localhost:11434/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "command-r-plus",
+      model: "mistral",
       messages: body.messages,
     }),
   });
 
-  const ollamaData = await ollamaRes.json();
+  const ollamaText = await ollamaRes.text();
+  console.log("Ollama Rohantwort:", ollamaText);
+
+  let ollamaData;
+  try {
+    ollamaData = JSON.parse(ollamaText);
+  } catch (e) {
+    // Fehler beim Parsen
+    console.error("Fehler beim Parsen der Ollama-Antwort:", ollamaText);
+    return new Response(
+      JSON.stringify({
+        error: "Ollama gibt kein JSON zurück",
+        details: ollamaText,
+      }),
+      { status: 500 }
+    );
+  }
 
   return Response.json(ollamaData);
 }
