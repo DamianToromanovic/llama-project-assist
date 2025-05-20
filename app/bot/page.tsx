@@ -44,7 +44,10 @@ export default function Page() {
         data.messages?.at(-1)?.content || // Falls mehrere messages zurückkommen
         "Bot konnte nicht antworten.";
 
-      setMessages((prev) => [...prev, { role: "bot", content: botMessage }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: botMessage },
+      ]);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
