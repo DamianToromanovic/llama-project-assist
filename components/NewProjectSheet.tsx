@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useUser } from "@/app/context/UserContext";
+
 type NewProjectSheetProps = {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
@@ -39,18 +41,26 @@ export default function NewProjectSheet({
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
+    if (!user) {
+      setError("User nicht eingeloggt");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase
       .from("projects")
-      .insert([{ ...newProject }]);
+      .insert([{ ...newProject, user_id: user.id }]);
     setLoading(false);
 
     if (error) {
-      setError("Fehler beim Anlegen des Projekts.");
+      setError("Fehler beim Anlegen des Projekts: " + error.message);
       return;
     }
     onOpenChange(false);
