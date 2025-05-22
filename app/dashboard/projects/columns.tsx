@@ -23,6 +23,7 @@ export type Project = {
   color: string;
   isFavorite: boolean;
 };
+export type ProjectForm = Omit<Project, "id" | "created_at">;
 
 export const columns: ColumnDef<Project>[] = [
   {

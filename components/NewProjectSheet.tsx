@@ -1,5 +1,5 @@
 "use client";
-
+import { ProjectForm } from "@/app/dashboard/projects/columns";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +15,14 @@ type NewProjectSheetProps = {
 export default function NewProjectSheet({
   setShowSheet,
 }: NewProjectSheetProps) {
+  const [newProject, setNewProject] = useState<ProjectForm>({
+    title: "",
+    description: "",
+    status: "",
+    color: "",
+    isFavorite: false,
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowSheet(false);
