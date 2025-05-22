@@ -1,11 +1,12 @@
 "use client";
 
 import { supabase } from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useUser } from "../../context/UserContext";
 import { Project, columns } from "./columns";
 import { DataTable } from "./data-table";
 import NewProjectSheet from "@/components/NewProjectSheet";
+import { Button } from "@/components/ui/button";
 
 export default function ProjectsPage() {
   const { user } = useUser();
@@ -13,32 +14,39 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [showSheet, setShowSheet] = useState<boolean>(false);
 
-  useEffect(() => {
+  //so wird nicht bei jedem rnder eine funktion erstellt sondern nur wenn user sich ändert
+  const fetchProjects = useCallback(async () => {
     if (!user) return;
-    const fetchProjects = async () => {
-      const { data, error } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("user_id", user.id);
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("user_id", user.id);
 
-      if (error) {
-        console.log("Fehler beim Ladden", error);
-      } else {
-        setProjects(data || []);
-      }
-
-      setLoading(false);
-    };
-    fetchProjects();
+    if (error) {
+      console.log("Fehler beim Laden", error);
+    } else {
+      setProjects(data || []);
+    }
+    setLoading(false);
   }, [user]);
+
+  // Beim Mount & user-Wechsel Projekte holen
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
   return (
     <>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Meine Projekte</h1>
-        <button onClick={() => setShowSheet(true)} type="button">
+        <Button
+          className="cursor-pointer mb-4"
+          onClick={() => setShowSheet(true)}
+          type="button"
+        >
           Projekt hinzufügen
-        </button>
+        </Button>
 
         {loading ? (
           <p>Lade Projekte...</p>
@@ -47,7 +55,13 @@ export default function ProjectsPage() {
         )}
       </div>
 
-      {showSheet && <NewProjectSheet setShowSheet={setShowSheet} />}
+      {showSheet && (
+        <NewProjectSheet
+          onProjectCreated={fetchProjects}
+          open={showSheet}
+          onOpenChange={setShowSheet}
+        />
+      )}
     </>
   );
 }
