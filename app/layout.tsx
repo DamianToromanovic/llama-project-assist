@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../globals.css";
+import "./globals.css";
 import Navbar from "@/components/Navbar";
-import { AppSidebar } from "@/components/AppSidebar";
-import { ThemeProvider } from "../providers/ThemeProvider";
-import { SidebarProvider } from "@/components/ui/sidebar";
+
+import { ThemeProvider } from "./providers/ThemeProvider";
+
 import { cookies } from "next/headers";
-import { UserProvider } from "../context/UserContext";
+import { UserProvider } from "./context/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,14 +28,23 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <main className="w-full">
-          <div className="px-4">{children}</div>
-        </main>
+        <UserProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </UserProvider>
       </body>
     </html>
   );

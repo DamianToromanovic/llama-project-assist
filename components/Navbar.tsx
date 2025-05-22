@@ -14,15 +14,26 @@ import {
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import { SidebarTrigger } from "./ui/sidebar";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const handleLogOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.log("Fehler beim Abmelden", error.message);
+    } else {
+      router.push("/");
+    }
+  };
 
   return (
-    <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
+    <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10 w-full">
       <SidebarTrigger />
       <div className="flex items-center gap-4">
-        <Link href={"/"}>Dashboard</Link>
+        <Link href={"/dashboard"}>Dashboard</Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
@@ -66,7 +77,10 @@ export default function Navbar() {
               Settings
             </DropdownMenuItem>
 
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem
+              onClick={() => handleLogOut()}
+              variant="destructive"
+            >
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
               Log out
             </DropdownMenuItem>

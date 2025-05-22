@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -41,6 +43,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./ui/collapsible";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 const items = [
   {
@@ -82,6 +86,15 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const router = useRouter();
+  const handleLogOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.log("Fheler beim Ausloggen", error.message);
+    } else {
+      router.push("/");
+    }
+  };
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">
@@ -128,7 +141,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href={"/#"}>
+                  <Link href={"/dashboard/projects"}>
                     <Projector />
                     Alle Projekte
                   </Link>
@@ -158,7 +171,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href={"/#"}>
+                      <Link href={"/dashboard/projects"}>
                         <Projector />
                         Alle Projekte
                       </Link>
