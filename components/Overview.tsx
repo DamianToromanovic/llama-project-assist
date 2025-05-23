@@ -3,6 +3,10 @@ import { Project } from "@/app/dashboard/projects/columns";
 import AppPieChart from "./AppPieChart";
 import { Accessibility } from "lucide-react";
 import Activities from "./Activities";
+import TodoList from "./TodoList";
+import Calender from "./Calender";
+import QuickActions from "./QuickActions";
+import Notes from "./Notes";
 
 type OverviewProps = {
   project: Project;
@@ -14,13 +18,21 @@ export default function Overview({ project }: OverviewProps) {
       <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
         <Activities />
       </div>
-      <div className="bg-primary-foreground p-4 rounded-lg"></div>
+      <div className="bg-primary-foreground p-4 rounded-lg">
+        <TodoList />
+      </div>
       <div className="bg-primary-foreground p-4 rounded-lg">
         <AppPieChart />
       </div>
-      <div className="bg-primary-foreground p-4 rounded-lg"></div>
-      <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2"></div>
-      <div className="bg-primary-foreground p-4 rounded-lg"></div>
+      <div className="bg-primary-foreground p-4 rounded-lg">
+        <Calender />
+      </div>
+      <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
+        <QuickActions />
+      </div>
+      <div className="bg-primary-foreground p-4 rounded-lg">
+        <Notes />
+      </div>
     </div>
   );
 }
