@@ -43,8 +43,8 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-sm w-full bg-white p-6 rounded shadow">
+    <main className="min-h-screen flex items-center justify-center px-4">
+      <div className="max-w-sm w-full bg-accent p-6 rounded shadow-xl">
         <header className="text-xl font-bold mb-4 text-center">
           Login zu ProjectPilot
         </header>
