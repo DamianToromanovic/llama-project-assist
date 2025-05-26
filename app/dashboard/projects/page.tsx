@@ -2,15 +2,16 @@
 
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState, useCallback } from "react";
-import { useUser } from "../../context/UserContext";
-import { Project, columns } from "./columns";
+import { useAppStore } from "@/app/store/useAppStore";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import NewProjectSheet from "@/components/NewProjectSheet";
 import { Button } from "@/components/ui/button";
 
 export default function ProjectsPage() {
-  const { user } = useUser();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const user = useAppStore((state) => state.user);
+  const projects = useAppStore((state) => state.projects);
+  const setProjects = useAppStore((state) => state.setProjects);
   const [loading, setLoading] = useState(true);
   const [showSheet, setShowSheet] = useState<boolean>(false);
 

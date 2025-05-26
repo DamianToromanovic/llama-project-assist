@@ -1,5 +1,5 @@
 "use client";
-import { ProjectForm } from "@/app/dashboard/projects/columns";
+import { ProjectForm } from "@/app/types/project";
 import {
   Sheet,
   SheetContent,
@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useUser } from "@/app/context/UserContext";
+import { useAppStore } from "@/app/store/useAppStore";
 
 type NewProjectSheetProps = {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,7 +29,7 @@ const initialProject = {
   description: "",
   status: "",
   color: "",
-  isFavorite: false,
+  is_favorite: false,
 };
 
 export default function NewProjectSheet({
@@ -41,7 +41,7 @@ export default function NewProjectSheet({
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useUser();
+  const user = useAppStore((state) => state.user);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,11 +151,11 @@ export default function NewProjectSheet({
             <input
               id="isFavorite"
               type="checkbox"
-              checked={newProject.isFavorite}
+              checked={newProject.is_favorite}
               onChange={(e) =>
                 setNewProject((prev) => ({
                   ...prev,
-                  isFavorite: e.target.checked,
+                  is_favorite: e.target.checked,
                 }))
               }
               className="h-5 w-5 accent-yellow-400"

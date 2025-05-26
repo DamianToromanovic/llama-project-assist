@@ -12,18 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
-export type Project = {
-  id: string;
-  title: string;
-  description: string;
-  created_at: string;
-  status: string;
-  color: string;
-  isFavorite: boolean;
-};
-export type ProjectForm = Omit<Project, "id" | "created_at">;
+import { MoreHorizontal } from "lucide-react";
+import { Project } from "@/app/types/project";
 
 export const columns: ColumnDef<Project>[] = [
   {

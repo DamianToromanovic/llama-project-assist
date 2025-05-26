@@ -1,7 +1,7 @@
 import React from "react";
-import { Project } from "@/app/dashboard/projects/columns";
+import { Project } from "@/app/types/project";
 import AppPieChart from "./AppPieChart";
-import { Accessibility } from "lucide-react";
+
 import Activities from "./Activities";
 import TodoList from "./TodoList";
 import Calender from "./Calender";

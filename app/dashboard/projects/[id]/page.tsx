@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Overview from "@/components/Overview";
-import { Project } from "../columns";
+import { Project } from "@/app/types/project";
 
 export default function ProjectDetailPage() {
   const { id } = useParams() as { id: string };
@@ -54,6 +54,10 @@ export default function ProjectDetailPage() {
       <div className="px-4 py-1 rounded-md bg-accent w-max">
         {project.status}
       </div>
+
+      {/* Evtl mehr als title und status???
+      
+      Tabs synchron zur URL machen => /projects/:id?tab=notes anspringen – später nice für Sharing/Deep Linking.*/}
       <div className="flex gap-3">
         <Button
           variant={tab === "overview" ? "default" : "outline"}

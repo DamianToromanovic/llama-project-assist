@@ -21,7 +21,7 @@ import {
 import { DataTablePagination } from "@/components/DataTablePagination";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Project } from "./columns";
+import { Project } from "@/app/types/project";
 
 interface DataTableProps {
   columns: ColumnDef<Project, any>[];
