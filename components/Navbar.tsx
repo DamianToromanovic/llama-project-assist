@@ -16,8 +16,10 @@ import { useTheme } from "next-themes";
 import { SidebarTrigger } from "./ui/sidebar";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useAppStore } from "@/app/store/useAppStore";
 
 export default function Navbar() {
+  const setUser = useAppStore((state) => state.setUser);
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const handleLogOut = async () => {
@@ -25,6 +27,7 @@ export default function Navbar() {
     if (error) {
       console.log("Fehler beim Abmelden", error.message);
     } else {
+      setUser(null);
       router.push("/");
     }
   };

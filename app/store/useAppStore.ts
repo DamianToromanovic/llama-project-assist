@@ -49,7 +49,7 @@ export type User = {
   created_at: string;
 };
 
-type AppState = {
+export type AppState = {
   user: User | null;
   setUser: (user: User | null) => void;
 
@@ -61,6 +61,9 @@ type AppState = {
 
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
+
+  projectRefreshCount: number;
+  incrementProjectRefreshCount: () => void;
 
   teamMembers: User[];
   setTeamMembers: (members: User[]) => void;
@@ -78,6 +81,12 @@ export const useAppStore = create<AppState>((set) => ({
 
   tasks: [],
   setTasks: (tasks) => set({ tasks }),
+
+  projectRefreshCount: 0,
+  incrementProjectRefreshCount: () =>
+    set((state) => ({
+      projectRefreshCount: state.projectRefreshCount + 1,
+    })),
 
   teamMembers: [],
   setTeamMembers: (members) => set({ teamMembers: members }),

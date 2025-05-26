@@ -19,19 +19,30 @@ export default function ProjectDetailPage() {
   );
 
   useEffect(() => {
-    if (!selectedProject && id) {
-      const fetchProjectById = async () => {
-        const { data, error } = await supabase
-          .from("projects")
-          .select("*")
-          .eq("id", id)
-          .single();
+    const fetchProjectById = async () => {
+      setLoading(true);
+      setError(null);
 
-        if (data) setSelectedProject(data);
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error || !data) {
+        setError("Projekt nicht gefunden.");
         setLoading(false);
-      };
+        return;
+      }
 
+      setSelectedProject(data);
+      setLoading(false);
+    };
+
+    if (!selectedProject && id) {
       fetchProjectById();
+    } else {
+      setLoading(false);
     }
   }, [id, selectedProject]);
 

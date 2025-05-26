@@ -21,7 +21,6 @@ import { useAppStore } from "@/app/store/useAppStore";
 type NewProjectSheetProps = {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
-  onProjectCreated: () => void;
 };
 
 const initialProject: ProjectForm = {
@@ -35,13 +34,15 @@ const initialProject: ProjectForm = {
 export default function NewProjectSheet({
   open,
   onOpenChange,
-  onProjectCreated,
 }: NewProjectSheetProps) {
   const [newProject, setNewProject] = useState<ProjectForm>(initialProject);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const user = useAppStore((state) => state.user);
+  const incrementProjectRefreshCount = useAppStore(
+    (state) => state.incrementProjectRefreshCount
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +65,6 @@ export default function NewProjectSheet({
       return;
     }
     onOpenChange(false);
-    onProjectCreated();
 
     setNewProject(initialProject);
   };

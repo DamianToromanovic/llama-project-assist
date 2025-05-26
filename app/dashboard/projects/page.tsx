@@ -14,6 +14,7 @@ export default function ProjectsPage() {
   const setProjects = useAppStore((state) => state.setProjects);
   const [loading, setLoading] = useState(true);
   const [showSheet, setShowSheet] = useState<boolean>(false);
+  const projectRefreshCount = useAppStore((state) => state.projectRefreshCount);
 
   //so wird nicht bei jedem rnder eine funktion erstellt sondern nur wenn user sich ändert
   const fetchProjects = useCallback(async () => {
@@ -35,7 +36,7 @@ export default function ProjectsPage() {
   // Beim Mount & user-Wechsel Projekte holen
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects]);
+  }, [fetchProjects, projectRefreshCount]);
 
   return (
     <>
@@ -57,11 +58,7 @@ export default function ProjectsPage() {
       </div>
 
       {showSheet && (
-        <NewProjectSheet
-          onProjectCreated={fetchProjects}
-          open={showSheet}
-          onOpenChange={setShowSheet}
-        />
+        <NewProjectSheet open={showSheet} onOpenChange={setShowSheet} />
       )}
     </>
   );
