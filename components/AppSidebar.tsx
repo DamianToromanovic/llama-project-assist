@@ -45,6 +45,7 @@ import {
 } from "./ui/collapsible";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useAppStore } from "@/app/store/useAppStore";
 
 const items = [
   {
@@ -86,15 +87,19 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const user = useAppStore((state) => state.user);
+  const setUser = useAppStore((state) => state.setUser);
   const router = useRouter();
   const handleLogOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      console.log("Fheler beim Ausloggen", error.message);
+      console.log("Fehler beim Ausloggen", error.message);
     } else {
+      setUser(null);
       router.push("/");
     }
   };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">
@@ -238,13 +243,15 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <User2 />
-                  John Doe <ChevronUp className="ml-auto" />
+                  {user?.name} <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>Account</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Sign out</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogOut}>
+                  Sign out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

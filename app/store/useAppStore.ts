@@ -51,7 +51,7 @@ export type User = {
 
 type AppState = {
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
 
   projects: Project[];
   setProjects: (projects: Project[]) => void;

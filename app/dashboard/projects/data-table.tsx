@@ -75,6 +75,7 @@ export function DataTable({ columns, data }: DataTableProps) {
             table.getRowModel().rows.map((row) => (
               <TableRow
                 onClick={() => {
+                  setSelectedProject(row.original);
                   router.push(`/dashboard/projects/${row.original.id}`);
                 }}
                 key={row.id}

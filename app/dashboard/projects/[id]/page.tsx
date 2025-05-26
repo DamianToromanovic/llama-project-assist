@@ -6,53 +6,44 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Overview from "@/components/Overview";
 import { Project } from "@/app/types/project";
-
+import { useAppStore } from "@/app/store/useAppStore";
 export default function ProjectDetailPage() {
   const { id } = useParams() as { id: string };
+  const selectedProject = useAppStore((state) => state.selectedProject);
+  const setSelectedProject = useAppStore((state) => state.setSelectedProject);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<"overview" | "todos" | "teams" | "notes">(
     "overview"
   );
-  const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    const fetchProjectById = async () => {
-      setLoading(true);
-      setError(null);
+    if (!selectedProject && id) {
+      const fetchProjectById = async () => {
+        const { data, error } = await supabase
+          .from("projects")
+          .select("*")
+          .eq("id", id)
+          .single();
 
-      const { data, error } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("id", id)
-        .single(); //wandelt arr in obj wenn man ein einzelens obj habne will
-
-      if (error || !data) {
-        setError("Projekt nicht gefunden.");
-        setProject(null);
+        if (data) setSelectedProject(data);
         setLoading(false);
-        // Optional: Redirect
-        // router.push("/dashboard/projects");
-        return;
-      }
+      };
 
-      setProject(data);
-      setLoading(false);
-    };
-
-    if (id) fetchProjectById();
-  }, [id]);
+      fetchProjectById();
+    }
+  }, [id, selectedProject]);
 
   if (loading) return <div className="p-6">Lädt…</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
-  if (!project) return null;
+  if (!selectedProject) return null;
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-bold">{project.title}</h1>
+      <h1 className="text-3xl font-bold">{selectedProject.title}</h1>
       <div className="px-4 py-1 rounded-md bg-accent w-max">
-        {project.status}
+        {selectedProject.status}
       </div>
 
       {/* Evtl mehr als title und status???
@@ -86,7 +77,7 @@ export default function ProjectDetailPage() {
       </div>
 
       <div>
-        {tab === "overview" && <Overview project={project} />}
+        {tab === "overview" && <Overview />}
         {tab === "todos" && <div>Hier kommen später die Aufgaben…</div>}
         {tab === "teams" && <div>Hier kommt später das Team…</div>}
         {tab === "notes" && <div>Hier kommen später die Notizen…</div>}
