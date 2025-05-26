@@ -1,0 +1,6 @@
+[main 7e9c251] onetx=
+ 12 files changed, 166 insertions(+), 156 deletions(-)
+ delete mode 100644 app/context/ProjectContext.tsx
+ delete mode 100644 app/context/UserContext.tsx
+ create mode 100644 app/store/useAppStore.ts
+ create mode 100644 app/types/project.ts

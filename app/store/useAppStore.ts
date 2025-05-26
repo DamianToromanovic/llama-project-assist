@@ -1,17 +1,5 @@
 import { create } from "zustand";
-
-// Types
-export type Project = {
-  id: string;
-  user_id: string;
-  title: string;
-  created_at: string;
-  status: "active" | "archived";
-  color: string;
-  is_favorite: boolean;
-  team_id: string;
-  description: string;
-};
+import { Project } from "../types/project";
 
 export type Task = {
   id: string;
@@ -61,29 +49,36 @@ export type User = {
   created_at: string;
 };
 
-// Zustand Store
 type AppState = {
   user: User | null;
   setUser: (user: User) => void;
 
   projects: Project[];
-  selectedProjectId: string | null;
-  tasks: Task[];
-
   setProjects: (projects: Project[]) => void;
-  selectProject: (id: string) => void;
+
+  selectedProject: Project | null;
+  setSelectedProject: (project: Project) => void;
+
+  tasks: Task[];
   setTasks: (tasks: Task[]) => void;
+
+  teamMembers: User[];
+  setTeamMembers: (members: User[]) => void;
 };
 
 export const useAppStore = create<AppState>((set) => ({
   user: null,
-  projects: [],
-  selectedProjectId: null,
-  tasks: [],
-  teamMembers: [],
-
   setUser: (user) => set({ user }),
+
+  projects: [],
   setProjects: (projects) => set({ projects }),
-  selectProject: (id) => set({ selectedProjectId: id }),
+
+  selectedProject: null,
+  setSelectedProject: (project) => set({ selectedProject: project }),
+
+  tasks: [],
   setTasks: (tasks) => set({ tasks }),
+
+  teamMembers: [],
+  setTeamMembers: (members) => set({ teamMembers: members }),
 }));

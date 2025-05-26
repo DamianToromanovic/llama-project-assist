@@ -24,10 +24,10 @@ type NewProjectSheetProps = {
   onProjectCreated: () => void;
 };
 
-const initialProject = {
+const initialProject: ProjectForm = {
   title: "",
   description: "",
-  status: "",
+  status: "aktiv",
   color: "",
   is_favorite: false,
 };
@@ -119,7 +119,7 @@ export default function NewProjectSheet({
           <div>
             <Select
               value={newProject.status}
-              onValueChange={(value) =>
+              onValueChange={(value: "aktiv" | "archiviert") =>
                 setNewProject((prev) => ({ ...prev, status: value }))
               }
             >
@@ -127,9 +127,8 @@ export default function NewProjectSheet({
                 <SelectValue placeholder="status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="open">Offen</SelectItem>
-                <SelectItem value="inProgress">In Arbeit</SelectItem>
-                <SelectItem value="done">Abgeschlossen</SelectItem>
+                <SelectItem value="aktiv">Aktiv</SelectItem>
+                <SelectItem value="archiviert">Archiviert</SelectItem>
               </SelectContent>
             </Select>
           </div>

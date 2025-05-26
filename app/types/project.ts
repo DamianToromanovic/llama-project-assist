@@ -3,7 +3,7 @@ export type Project = {
   user_id: string;
   title: string;
   created_at: string;
-  status: "active" | "archived";
+  status: "aktiv" | "archiviert";
   color: string;
   is_favorite: boolean;
   team_id: string;
@@ -13,7 +13,7 @@ export type Project = {
 export type ProjectForm = {
   title: string;
 
-  status: string;
+  status: "aktiv" | "archiviert";
   color: string;
   is_favorite: boolean;
 

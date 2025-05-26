@@ -22,6 +22,7 @@ import { DataTablePagination } from "@/components/DataTablePagination";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "@/app/types/project";
+import { useAppStore } from "@/app/store/useAppStore";
 
 interface DataTableProps {
   columns: ColumnDef<Project, any>[];
@@ -31,6 +32,7 @@ interface DataTableProps {
 export function DataTable({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
+  const setSelectedProject = useAppStore((state) => state.setSelectedProject);
   const router = useRouter();
 
   const table = useReactTable({
@@ -47,7 +49,6 @@ export function DataTable({ columns, data }: DataTableProps) {
     },
   });
 
-  console.log(table);
   return (
     <div className="rounded-md border">
       <Table>
