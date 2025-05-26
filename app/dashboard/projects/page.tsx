@@ -17,26 +17,27 @@ export default function ProjectsPage() {
   const projectRefreshCount = useAppStore((state) => state.projectRefreshCount);
 
   //so wird nicht bei jedem rnder eine funktion erstellt sondern nur wenn user sich ändert
-  const fetchProjects = useCallback(async () => {
-    if (!user) return;
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("projects")
-      .select("*")
-      .eq("user_id", user.id);
-
-    if (error) {
-      console.log("Fehler beim Laden", error);
-    } else {
-      setProjects(data || []);
-    }
-    setLoading(false);
-  }, [user]);
 
   // Beim Mount & user-Wechsel Projekte holen
   useEffect(() => {
+    const fetchProjects = async () => {
+      if (!user) return;
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.log("Fehler beim Laden", error);
+      } else {
+        setProjects(data || []);
+        setLoading(false);
+      }
+      setLoading(false);
+    };
     fetchProjects();
-  }, [fetchProjects, projectRefreshCount]);
+  }, [user, projectRefreshCount]);
 
   return (
     <>

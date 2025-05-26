@@ -11,6 +11,7 @@ export default function ProjectDetailPage() {
   const { id } = useParams() as { id: string };
   const selectedProject = useAppStore((state) => state.selectedProject);
   const setSelectedProject = useAppStore((state) => state.setSelectedProject);
+  const setTasksOfSelectedProject = useAppStore((s) => s.setTasks);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,6 +19,7 @@ export default function ProjectDetailPage() {
     "overview"
   );
 
+  //useEffect for fetching selectedProject and setting in store, dependency: id, setctedProject from store
   useEffect(() => {
     const fetchProjectById = async () => {
       setLoading(true);
@@ -45,6 +47,22 @@ export default function ProjectDetailPage() {
       setLoading(false);
     }
   }, [id, selectedProject]);
+
+  useEffect(() => {
+    if (!selectedProject || !selectedProject.id) return;
+    const fetchTasks = async () => {
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .eq("project_id", selectedProject.id);
+      if (error || !data) {
+        setError("Tasks nichts gefunden");
+        return;
+      }
+      setTasksOfSelectedProject(data);
+    };
+    fetchTasks();
+  }, [selectedProject]);
 
   if (loading) return <div className="p-6">Lädt…</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
