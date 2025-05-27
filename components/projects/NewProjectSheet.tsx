@@ -6,7 +6,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "./ui/sheet";
+} from "../ui/sheet";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import {
@@ -15,7 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 import { useAppStore } from "@/app/store/useAppStore";
 
 type NewProjectSheetProps = {

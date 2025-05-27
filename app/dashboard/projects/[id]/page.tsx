@@ -4,15 +4,17 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import Overview from "@/components/Overview";
+import Overview from "@/components/projects/Overview";
 import { Project } from "@/app/types/project";
 import { useAppStore } from "@/app/store/useAppStore";
-import Tasks from "@/components/Tasks";
+import Tasks from "@/components/projects/Tasks";
 export default function ProjectDetailPage() {
   const { id } = useParams() as { id: string };
   const selectedProject = useAppStore((state) => state.selectedProject);
   const setSelectedProject = useAppStore((state) => state.setSelectedProject);
-  const setTasksOfSelectedProject = useAppStore((s) => s.setTasks);
+  const setCategories = useAppStore((s) => s.setCategories);
+  const categories = useAppStore((s) => s.categories);
+  const setTasks = useAppStore((s) => s.setTasks);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,19 +53,42 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     if (!selectedProject || !selectedProject.id) return;
-    const fetchTasks = async () => {
+    const fetchCategories = async () => {
       const { data, error } = await supabase
-        .from("tasks")
+        .from("categories")
         .select("*")
         .eq("project_id", selectedProject.id);
       if (error || !data) {
-        setError("Tasks nichts gefunden");
+        setError("Kategorien nichts gefunden");
         return;
       }
-      setTasksOfSelectedProject(data);
+      setCategories(data);
+    };
+    fetchCategories();
+  }, [selectedProject]);
+
+  useEffect(() => {
+    if (!categories) return;
+    if (categories.length === 0) {
+      // Kein Fetch, keine Tasks vorhanden
+      setTasks([]); // Tasks im Store auf leer setzen!
+      return;
+    }
+    const fetchTasks = async () => {
+      const categoryIds = categories.map((cat) => cat.id);
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .in("category_id", categoryIds);
+      if (error || !data) {
+        setError("Tasks nichts gefunden");
+        setTasks([]);
+        return;
+      }
+      setTasks(data);
     };
     fetchTasks();
-  }, [selectedProject]);
+  }, [categories]);
 
   if (loading) return <div className="p-6">Lädt…</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
@@ -108,11 +133,7 @@ export default function ProjectDetailPage() {
 
       <div>
         {tab === "overview" && <Overview />}
-        {tab === "todos" && (
-          <div>
-            <Tasks />
-          </div>
-        )}
+        {tab === "todos" && <Tasks />}
         {tab === "teams" && <div>Hier kommt später das Team…</div>}
         {tab === "notes" && <div>Hier kommen später die Notizen…</div>}
       </div>

@@ -5,7 +5,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "./ui/chart";
+} from "../ui/chart";
 import { Label, Pie, PieChart } from "recharts";
 const chartData = [
   { status: "Zu erledigen", tasks: 5, fill: "var(--color-chart-5)" },

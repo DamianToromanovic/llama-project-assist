@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useAppStore } from "@/app/store/useAppStore";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import NewProjectSheet from "@/components/NewProjectSheet";
+import NewProjectSheet from "@/components/projects/NewProjectSheet";
 import { Button } from "@/components/ui/button";
 
 export default function ProjectsPage() {

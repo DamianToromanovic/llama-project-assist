@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "@/components/DataTablePagination";
+import { DataTablePagination } from "@/components/projects/DataTablePagination";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "@/app/types/project";
