@@ -6,8 +6,7 @@ import KanbanBoard from "./KanbanBoard";
 
 export default function Tasks() {
   const selectedProject = useAppStore((state) => state.selectedProject);
-  const tasks = useAppStore((s) => s.tasks);
-  const setTasks = useAppStore((s) => s.setTasks);
+
   const categories = useAppStore((s) => s.categories);
   const setCategories = useAppStore((s) => s.setCategories);
   const [selectedCategory, setSelectedCategory] = useState<string>("Alle");
