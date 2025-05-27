@@ -22,20 +22,31 @@ export default function LoginPage() {
   const login = async (email: string, password: string) => {
     setError("");
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.signInWithPassword({ email, password });
+    // 1. Login bei Supabase Auth
+    const { data: signInData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (authError || !user) {
-      setError(authError?.message || "Login fehlgeschlagen");
+    if (authError) {
+      setError(authError.message || "Login fehlgeschlagen");
       return;
     }
 
+    // 2. Echten User nach Login holen (Supabase speichert Session async)
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !userData?.user) {
+      setError(userError?.message || "User konnte nicht geladen werden.");
+      return;
+    }
+
+    // 3. Profil-Daten aus Datenbank holen
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("*")
-      .eq("id", user.id)
+      .eq("id", userData.user.id)
       .single();
 
     if (profileError || !profile) {
@@ -44,6 +55,7 @@ export default function LoginPage() {
     }
 
     setUser(profile);
+
     router.push("/dashboard");
   };
 

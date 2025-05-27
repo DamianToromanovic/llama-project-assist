@@ -41,12 +41,19 @@ export type Note = {
 
 export type User = {
   id: string;
-  email: string;
-  name: string;
+  email?: string;
+  name?: string;
   avatar_url?: string;
-  role: "admin" | "member";
+  role?: string;
   team_id?: string;
-  created_at: string;
+  created_at?: string;
+};
+
+export type Category = {
+  id: string;
+  name: string;
+  color?: string;
+  order?: string;
 };
 
 export type AppState = {
@@ -57,13 +64,16 @@ export type AppState = {
   setProjects: (projects: Project[]) => void;
 
   selectedProject: Project | null;
-  setSelectedProject: (project: Project) => void;
+  setSelectedProject: (project: Project | null) => void;
 
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
 
   projectRefreshCount: number;
   incrementProjectRefreshCount: () => void;
+
+  categories: Category[];
+  setCategories: (categories: Category[]) => void;
 
   teamMembers: User[];
   setTeamMembers: (members: User[]) => void;
@@ -87,6 +97,9 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       projectRefreshCount: state.projectRefreshCount + 1,
     })),
+
+  categories: [],
+  setCategories: (categories) => set({ categories }),
 
   teamMembers: [],
   setTeamMembers: (members) => set({ teamMembers: members }),

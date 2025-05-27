@@ -61,29 +61,35 @@ const items = [
     id: 2,
   },
   {
+    title: "Projekte",
+    url: "/projects",
+    icon: Projector,
+    id: 3,
+  },
+  {
     title: "Kalendar",
     url: "/Calendar",
     icon: Calendar,
-    id: 3,
+    id: 4,
   },
   {
     title: "Suche",
     url: "/serach",
     icon: Search,
-    id: 4,
+    id: 5,
   },
   {
     title: "Einstellungen",
     url: "/settings",
     icon: Settings,
-    id: 5,
-  },
-  {
-    title: "Bot",
-    url: "/bot",
-    icon: Projector,
     id: 6,
   },
+  // {
+  //   title: "Bot",
+  //   url: "/bot",
+  //   icon: Projector,
+  //   id: 7,
+  // },
 ];
 
 export function AppSidebar() {
@@ -121,22 +127,22 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((i) => (
-                <SidebarMenuItem key={i.id}>
+                <SidebarMenuItem className="mb-6" key={i.id}>
                   <SidebarMenuButton asChild>
-                    <Link href={i.url}>
+                    <Link href={`/dashboard/${i.url}`}>
                       <i.icon />
-                      <span>{i.title}</span>
+                      <span className="text-xl">{i.title}</span>
                     </Link>
                   </SidebarMenuButton>
                   {i.title === "Mitteilungen" && (
-                    <SidebarMenuBadge>24</SidebarMenuBadge>
+                    <SidebarMenuBadge className="text-xl">24</SidebarMenuBadge>
                   )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel>Projekte</SidebarGroupLabel>
           <SidebarGroupAction title="Add Project">
             <Plus /> <span className="sr-only">Add Project</span>
@@ -234,7 +240,7 @@ export function AppSidebar() {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>

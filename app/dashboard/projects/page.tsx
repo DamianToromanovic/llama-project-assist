@@ -1,7 +1,7 @@
 "use client";
 
 import { supabase } from "@/lib/supabase";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useAppStore } from "@/app/store/useAppStore";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ProjectsPage() {
   const user = useAppStore((state) => state.user);
+  const setUser = useAppStore((s) => s.setUser);
   const projects = useAppStore((state) => state.projects);
   const setProjects = useAppStore((state) => state.setProjects);
   const [loading, setLoading] = useState(true);
@@ -19,25 +20,38 @@ export default function ProjectsPage() {
   //so wird nicht bei jedem rnder eine funktion erstellt sondern nur wenn user sich ändert
 
   // Beim Mount & user-Wechsel Projekte holen
+  console.log("usr:", user);
   useEffect(() => {
     const fetchProjects = async () => {
-      if (!user) return;
+      let activeUser = user;
+
+      // 1. Falls kein User im Zustand, versuche, ihn aus Supabase zu holen
+      if (!activeUser) {
+        const { data, error } = await supabase.auth.getUser();
+        if (error || !data?.user) {
+          console.log("Kein User gefunden, lade keine Projekte");
+          return; // Brich den Fetch ab
+        }
+        activeUser = data.user;
+        setUser(activeUser); // Optional: direkt in Zustand setzen
+      }
+
       setLoading(true);
       const { data, error } = await supabase
         .from("projects")
         .select("*")
-        .eq("user_id", user.id);
+        .eq("user_id", activeUser.id);
 
       if (error) {
         console.log("Fehler beim Laden", error);
       } else {
         setProjects(data || []);
-        setLoading(false);
       }
       setLoading(false);
     };
+
     fetchProjects();
-  }, [user, projectRefreshCount]);
+  }, [user, projectRefreshCount, setProjects, setUser]);
 
   return (
     <>

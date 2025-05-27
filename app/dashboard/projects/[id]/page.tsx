@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Overview from "@/components/Overview";
 import { Project } from "@/app/types/project";
 import { useAppStore } from "@/app/store/useAppStore";
+import Tasks from "@/components/Tasks";
 export default function ProjectDetailPage() {
   const { id } = useParams() as { id: string };
   const selectedProject = useAppStore((state) => state.selectedProject);
@@ -107,7 +108,11 @@ export default function ProjectDetailPage() {
 
       <div>
         {tab === "overview" && <Overview />}
-        {tab === "todos" && <div>Hier kommen später die Aufgaben…</div>}
+        {tab === "todos" && (
+          <div>
+            <Tasks />
+          </div>
+        )}
         {tab === "teams" && <div>Hier kommt später das Team…</div>}
         {tab === "notes" && <div>Hier kommen später die Notizen…</div>}
       </div>
