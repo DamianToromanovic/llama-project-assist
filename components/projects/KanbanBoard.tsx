@@ -4,7 +4,6 @@ import React from "react";
 
 export default function KanbanBoard() {
   const tasks = useAppStore((s) => s.tasks);
-  const setTasks = useAppStore((s) => s.setTasks);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-8 h-full w-full">
@@ -34,9 +33,6 @@ export default function KanbanBoard() {
       <div className="bg-accent p-4 rounded-2xl min-h-[300px] flex flex-col">
         <div className="flex justify-between">
           <h2 className="font-semibold mb-2 text-lg ">Abgeschlossen</h2>
-          <button type="button" className="bg-card px-6 py-2">
-            <Plus />
-          </button>
         </div>
         <div className="flex-1 flex flex-col gap-2">
           {tasks

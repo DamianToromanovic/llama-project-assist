@@ -35,7 +35,7 @@ const TasksFilter: React.FC<TasksFilterProps> = ({
   <section className="flex justify-between">
     <div className="flex gap-3">
       <DropdownMenu>
-        <DropdownMenuTrigger className="bg-muted px-2 py-2 rounded-md cursor-pointer flex justify-between gap-6">
+        <DropdownMenuTrigger className="bg-muted px-2 py-2 rounded-md cursor-pointer flex justify-between gap-6 items-center">
           {selectedCategory} <ChevronDown />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
