@@ -3,10 +3,11 @@ import { useAppStore } from "@/app/store/useAppStore";
 import { supabase } from "@/lib/supabase";
 import TasksFilter from "./TasksFilter";
 import KanbanBoard from "./KanbanBoard";
+import AddTaskCard from "./AddTaskCard";
 
 export default function Tasks() {
   const selectedProject = useAppStore((state) => state.selectedProject);
-
+  const [openAddTaskCard, setOpenAddTaskCard] = useState<boolean>(false);
   const categories = useAppStore((s) => s.categories);
   const setCategories = useAppStore((s) => s.setCategories);
   const [selectedCategory, setSelectedCategory] = useState<string>("Alle");
@@ -40,7 +41,7 @@ export default function Tasks() {
   };
 
   return (
-    <main className="flex flex-col ">
+    <main className="flex flex-col relative">
       <TasksFilter
         withAll={withAll}
         selectedCategory={selectedCategory}
@@ -50,7 +51,11 @@ export default function Tasks() {
         newCategoryName={newCategoryName}
         setNewCategoryName={setNewCategoryName}
         handleAddCategory={handleAddCategory}
+        setOpenAddTaskCard={setOpenAddTaskCard}
       />
+      {openAddTaskCard && (
+        <AddTaskCard setOpenAddTaskCard={setOpenAddTaskCard} />
+      )}
       <KanbanBoard />
     </main>
   );
